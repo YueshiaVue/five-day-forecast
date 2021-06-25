@@ -4,6 +4,19 @@ var searchButton = document.getElementById('search-button');
 var nameHistory = document.getElementById('name-history');
 var weatherInfo = document.getElementById('weather-information');
 weatherInfo.className = "row col-md-8"
+var fiveHeader = document.createElement('div');
+fiveHeader.className = "col-md-12";
+var fiveTitle = document.createElement('h3');
+var fiveName = document.createTextNode('5-Day Forecast: ');
+fiveTitle.appendChild(fiveName);
+fiveHeader.appendChild(fiveTitle);
+var clearName = document.createTextNode('Clear');
+var clearButton = document.createElement('button');
+clearButton.className = "btn btn-secondary"
+var searchBox = document.getElementById('search-box');
+clearButton.appendChild(clearName);
+searchBox.appendChild(clearButton);
+
 
 function addCityHistory(cityname) {
     var cityHistory = getCityHistory();
@@ -77,8 +90,13 @@ function buildWeatherContent (data) {
                 buildContext(humidity, weatherContainer);
                 buildContext(UVindex, weatherContainer);
             } else {
+                if(index === 1) {
+                    weatherInfo.appendChild(fiveHeader);
+                }
                 var nextFive = document.createElement('div')
-                nextFive.className = "col-md-2";
+                nextFive.className = "col-md-2 five";
+                var date = document.createTextNode(datetime)
+                buildContext(date,nextFive);
                 buildContext(weatherTemp,nextFive);
                 buildContext(wind, nextFive);
                 buildContext(humidity, nextFive);
@@ -108,7 +126,13 @@ searchButton.onclick = function(){
     }
 };
 
-function clearHistory () {
+clearButton.onclick = function(){
+    removeListHistoryElement();
+    clearLocalStorageHistory();
+}
+
+
+function clearLocalStorageHistory () {
     window.localStorage.setItem('cityHistory','[]')
 }
 
@@ -119,6 +143,12 @@ function addHistoryList (cityName) {
     nameHistory.appendChild(list);
 }
 
+function removeListHistoryElement() {
+    let list = getCityHistory();
+    list.forEach((data,index)=> {
+        nameHistory.removeChild(nameHistory.childNodes[index]);   
+    });
+}
 
 function createHistory() {
     var cityHistory = getCityHistory();
