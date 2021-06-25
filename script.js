@@ -141,9 +141,16 @@ function addHistoryList (cityName) {
     var listName = document.createTextNode(cityName);
     list.appendChild(listName);
     list.onclick = function(){
+        removeElementChildren(weatherInfo);
         getCityWeather(cityName);
     }
     nameHistory.appendChild(list);
+}
+
+function removeElementChildren(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
 }
 
 function removeListHistoryElement() {
