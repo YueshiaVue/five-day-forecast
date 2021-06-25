@@ -8,3 +8,8 @@
     background: beige;
     border: 2px solid black;
 }
+
+li {
+    list-style-type: none;
+    border: 1px solid black;
+}

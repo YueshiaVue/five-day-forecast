@@ -140,6 +140,9 @@ function addHistoryList (cityName) {
     var list = document.createElement('li');
     var listName = document.createTextNode(cityName);
     list.appendChild(listName);
+    list.onclick = function(){
+        getCityWeather(cityName);
+    }
     nameHistory.appendChild(list);
 }
 
