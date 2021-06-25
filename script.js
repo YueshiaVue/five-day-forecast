@@ -1,19 +1,28 @@
-//var weatherApiUrl = 'https://api.openweathermap.org';
-//var weatherApiKey = '886ce2f5216424339336fa34de58a37d'
-
+// var weatherApiUrl = 'https://api.openweathermap.org';
+var weatherApiKey = '886ce2f5216424339336fa34de58a37d'
 var searchButton = document.getElementById('search-button');
 var nameHistory = document.getElementById('name-history');
 
 function addCityHistory(cityname) {
-    var cityHistory = JSON.parse(window.localStorage.getItem('cityHistory')) || [];
+    var cityHistory = getCityHistory();
     cityHistory.push(cityname)
     // adding city to local storage
     window.localStorage.setItem('cityHistory',JSON.stringify(cityHistory))
 };
 
 function getCityHistory() {
-    return window.localStorage.getItem('cityHistory') || [];
+    return JSON.parse(window.localStorage.getItem('cityHistory')) || [];
 }
+
+function getCityWeather (city) {
+    fetch('https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&appid=' + weatherApiKey)
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)
+        return data;
+    });
+}
+
 
 searchButton.onclick = function(){
     var cityName = document.getElementById('city-name').value;
@@ -38,8 +47,7 @@ function addHistoryList (cityName) {
 
 
 function createHistory() {
-    var cityHistory = JSON.parse(window.localStorage.getItem('cityHistory')) || [];
-    console.log(nameHistory)
+    var cityHistory = getCityHistory();
     cityHistory.forEach(cityName => {
         addHistoryList(cityName);
     });
