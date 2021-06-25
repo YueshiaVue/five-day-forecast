@@ -3,6 +3,7 @@ var weatherApiKey = '886ce2f5216424339336fa34de58a37d'
 var searchButton = document.getElementById('search-button');
 var nameHistory = document.getElementById('name-history');
 var weatherInfo = document.getElementById('weather-information');
+weatherInfo.className = "row col-md-8"
 
 function addCityHistory(cityname) {
     var cityHistory = getCityHistory();
@@ -15,7 +16,9 @@ function getCityHistory() {
     return JSON.parse(window.localStorage.getItem('cityHistory')) || [];
 }
 
+// api call function
 function getCityWeather (city) {
+    // fetch api url  
     fetch('https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&appid=' + weatherApiKey)
     .then(response => response.json())
     .then(data => buildWeatherContent(data));
@@ -52,27 +55,46 @@ function buildWeatherContent (data) {
         // gust: 6.34
         // speed: 2.5
 
-        list.forEach((info,index) => {
+        list.every((info,index) => {
             var temp = info.main.temp;
             var wind = info.wind.speed;
             var humidity = info.main.humidity;
             var datetime = info.dt_txt;
-        
-            if(index === 0) {
+            weatherTemp = document.createTextNode("Temp: " + temp + " F");;
+            wind = document.createTextNode("Wind: " + wind + " MPH");;
+            humidity = document.createTextNode("Humidity: " + humidity + " %");;
+            if(index === 0) {     
+                UVindex = document.createTextNode("UV Index: ");;
                 var title = document.createElement('h2');
                 var nameAndDate = document.createTextNode(cityname + " " + datetime)
+                weatherContainer.className = "col-md-12"
                 title.appendChild(nameAndDate);
                 weatherContainer.appendChild(title);
                 weatherInfo.appendChild(weatherContainer);
-            //     weatherTemp = document.createTextNode(temp);;
-            //     wind = document.createTextNode(wind);;
-            //     humidity = document.createTextNode(humidity);;
-            //     UVindex = document.createTextNode('');;
+                 
+                buildContext(weatherTemp,weatherContainer);
+                buildContext(wind, weatherContainer);
+                buildContext(humidity, weatherContainer);
+                buildContext(UVindex, weatherContainer);
+            } else {
+                var nextFive = document.createElement('div')
+                nextFive.className = "col-md-2";
+                buildContext(weatherTemp,nextFive);
+                buildContext(wind, nextFive);
+                buildContext(humidity, nextFive);
+                weatherInfo.appendChild(nextFive);
+                if(index === 5){
+                    return false;
+                }
             }
-            
+            return true;
         });
-
     
+}
+function buildContext(string,element) {
+    var p = document.createElement('p');
+    p.appendChild(string);
+    element.appendChild(p);
 }
 
 searchButton.onclick = function(){
